@@ -12,12 +12,11 @@
  * @see https://github.com/tenancy
  */
 
-namespace Tenancy\Affects\Logs\Providers;
+namespace Tenancy\Affects\Logs;
 
-use Tenancy\Affects\Logs\Listeners\ConfiguresLogs;
 use Tenancy\Support\AffectsProvider;
 
-class ServiceProvider extends AffectsProvider
+class Provider extends AffectsProvider
 {
     protected $affects = [ConfiguresLogs::class];
 }

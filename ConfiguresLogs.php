@@ -12,27 +12,25 @@
  * @see https://github.com/tenancy
  */
 
-namespace Tenancy\Affects\Logs\Listeners;
+namespace Tenancy\Affects\Logs;
 
 use Illuminate\Contracts\Config\Repository;
-use Tenancy\Affects\Logs\Events\ConfigureLogs;
+use Tenancy\Affects\Affect;
 use Tenancy\Concerns\DispatchesEvents;
-use Tenancy\Contracts\TenantAffectsApp;
-use Tenancy\Identification\Events\Switched;
 
-class ConfiguresLogs implements TenantAffectsApp
+class ConfiguresLogs extends Affect
 {
     use DispatchesEvents;
 
-    public function handle(Switched $event): ?bool
+    public function fire(): void
     {
         /** @var Repository $config */
         $config = resolve(Repository::class);
 
-        if ($event->tenant) {
+        if ($this->event->tenant) {
             $logConfig = [];
 
-            $this->events()->dispatch(new ConfigureLogs($event, $logConfig));
+            $this->events()->dispatch(new Events\ConfigureLogs($this->event, $logConfig));
         }
 
         // Configure the tenant log channel.
@@ -40,7 +38,5 @@ class ConfiguresLogs implements TenantAffectsApp
 
         // There is currently no way to unset a log channel :(
         app()->forgetInstance('log');
-
-        return null;
     }
 }
